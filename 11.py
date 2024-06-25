@@ -85,13 +85,32 @@ import random
 import streamlit as st
 
 
-def load_bags_from_excel(filename):
-    df = pd.read_excel(filename)
-    bags = df['bag'].tolist()
+rom markdown2 import Markdown
+from bs4 import BeautifulSoup
+
+def load_bags_from_markdown(filename):
+    # Read the Markdown file
+    with open(filename, 'r') as file:
+        markdown_text = file.read()
+
+    # Convert Markdown to HTML
+    markdowner = Markdown()
+    html = markdowner.convert(markdown_text)
+
+    # Parse the HTML to extract the table
+    soup = BeautifulSoup(html, 'html.parser')
+    table = soup.find('table')
+
+    # Extract rows from the table
+    bags = []
+    if table:
+        for row in table.find_all('tr')[1:]:  # Skip the header row
+            bag_cell = row.find_all('td')[0]  # Assuming bag name is in the first column
+            bags.append(bag_cell.get_text())
+
     return bags
 
-bags = load_bags_from_excel('e.md')
-
+bags = load_bags_from_markdown('e.md')
 if 'initial_bags' not in st.session_state:
      st.session_state['initial_bags'] = random.sample(bags, 3)
 initial_bags = st.session_state['initial_bags']
