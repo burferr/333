@@ -90,7 +90,7 @@ def load_bags_from_excel(filename):
     bags = df['bag'].tolist()
     return bags
 
-bags = load_bags_from_excel('e.md')
+bags = load_bags_from_excel('e.xlsx')
 
 if 'initial_bags' not in st.session_state:
      st.session_state['initial_bags'] = random.sample(bags, 3)
